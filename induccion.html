@@ -1,0 +1,2506 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inducción Desarrolladores — rdt_web_erp</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <style>
+    :root {
+      --primary: #762344;
+      --primary-hover: #5d1d36;
+      --primary-active: #7b3953;
+      --accent: #F45100;
+      --accent-light: #fff3ee;
+      --bg: #f8f9fb;
+      --sidebar-bg: #1a0d13;
+      --sidebar-width: 280px;
+      --text: #1e1e2e;
+      --text-muted: #6b7280;
+      --border: #e5e7eb;
+      --card-bg: #ffffff;
+      --code-bg: #1e1e2e;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --info: #3b82f6;
+      --radius: 12px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.07);
+      --shadow-lg: 0 8px 40px rgba(0,0,0,0.12);
+      --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ─── SIDEBAR ─────────────────────────────── */
+    #sidebar {
+      width: var(--sidebar-width);
+      background: var(--sidebar-bg);
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      overflow-y: auto;
+      z-index: 100;
+      transition: transform var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+
+    #sidebar::-webkit-scrollbar { width: 4px; }
+    #sidebar::-webkit-scrollbar-track { background: transparent; }
+    #sidebar::-webkit-scrollbar-thumb { background: #ffffff20; border-radius: 4px; }
+
+    .sidebar-header {
+      padding: 28px 20px 20px;
+      border-bottom: 1px solid #ffffff12;
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .sidebar-logo .logo-icon {
+      width: 36px; height: 36px;
+      background: var(--primary);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .sidebar-logo h1 {
+      font-size: 13px;
+      font-weight: 600;
+      color: #ffffff;
+      line-height: 1.3;
+    }
+
+    .sidebar-logo span {
+      font-size: 11px;
+      color: #ffffff60;
+      font-weight: 400;
+    }
+
+    .sidebar-search {
+      position: relative;
+    }
+
+    .sidebar-search input {
+      width: 100%;
+      background: #ffffff10;
+      border: 1px solid #ffffff15;
+      border-radius: 8px;
+      padding: 8px 12px 8px 34px;
+      color: #ffffff;
+      font-size: 12px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color var(--transition);
+    }
+
+    .sidebar-search input::placeholder { color: #ffffff40; }
+    .sidebar-search input:focus { border-color: var(--primary); }
+
+    .sidebar-search .search-icon {
+      position: absolute;
+      left: 10px; top: 50%;
+      transform: translateY(-50%);
+      color: #ffffff40;
+      font-size: 14px;
+    }
+
+    .sidebar-nav { padding: 12px 0; flex: 1; }
+
+    .nav-section {
+      padding: 6px 20px 4px;
+      font-size: 10px;
+      font-weight: 600;
+      color: #ffffff30;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 8px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 20px;
+      color: #ffffffb0;
+      font-size: 12.5px;
+      cursor: pointer;
+      transition: all var(--transition);
+      border-left: 3px solid transparent;
+      text-decoration: none;
+      line-height: 1.3;
+    }
+
+    .nav-item:hover {
+      background: #ffffff0d;
+      color: #ffffff;
+      border-left-color: var(--primary);
+    }
+
+    .nav-item.active {
+      background: linear-gradient(90deg, #76234420, transparent);
+      color: #ffffff;
+      border-left-color: var(--primary);
+      font-weight: 500;
+    }
+
+    .nav-item .nav-num {
+      width: 20px; height: 20px;
+      background: #ffffff10;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      color: #ffffff60;
+    }
+
+    .nav-item.active .nav-num {
+      background: var(--primary);
+      color: white;
+    }
+
+    .sidebar-footer {
+      padding: 16px 20px;
+      border-top: 1px solid #ffffff12;
+      font-size: 11px;
+      color: #ffffff30;
+    }
+
+    /* ─── MAIN CONTENT ────────────────────────── */
+    #main {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      min-height: 100vh;
+    }
+
+    /* ─── TOP BAR ─────────────────────────────── */
+    #topbar {
+      position: sticky;
+      top: 0;
+      background: rgba(248, 249, 251, 0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      z-index: 50;
+    }
+
+    .topbar-breadcrumb {
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .topbar-breadcrumb span { color: var(--text); font-weight: 500; }
+
+    .topbar-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+    .btn-topbar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-family: inherit;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      color: var(--text);
+      transition: all var(--transition);
+    }
+
+    .btn-topbar:hover { border-color: var(--primary); color: var(--primary); }
+
+    .btn-topbar.primary {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+
+    .btn-topbar.primary:hover { background: var(--primary-hover); }
+
+    /* ─── HERO ────────────────────────────────── */
+    #hero {
+      background: linear-gradient(135deg, var(--primary) 0%, #4a0f26 60%, #1a0d13 100%);
+      padding: 60px 40px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #hero::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, #F4510030 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    #hero::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; left: 20%;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, #76234450 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ffffff15;
+      border: 1px solid #ffffff25;
+      border-radius: 100px;
+      padding: 4px 12px;
+      font-size: 11px;
+      color: #ffffffc0;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-badge .dot {
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(0.8); }
+    }
+
+    #hero h1 {
+      font-size: 36px;
+      font-weight: 700;
+      color: white;
+      line-height: 1.15;
+      margin-bottom: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    #hero h1 em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    #hero p {
+      font-size: 15px;
+      color: #ffffffb0;
+      max-width: 560px;
+      line-height: 1.7;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 32px;
+      margin-top: 36px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-stat {
+      text-align: center;
+    }
+
+    .hero-stat .value {
+      font-size: 28px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .hero-stat .label {
+      font-size: 11px;
+      color: #ffffff60;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── CONTENT AREA ────────────────────────── */
+    #content { padding: 40px; }
+
+    /* ─── SECTION ─────────────────────────────── */
+    .section {
+      margin-bottom: 48px;
+      animation: fadeUp 0.4s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .section-num {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-active));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: white;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px #76234440;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .section-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ─── CARDS ───────────────────────────────── */
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 24px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow);
+      transition: box-shadow var(--transition), transform var(--transition);
+    }
+
+    .card:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    /* ─── TECH STACK ──────────────────────────── */
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(220px, 100%), 1fr));
+      gap: 12px;
+    }
+
+    .tech-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all var(--transition);
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .tech-item:hover {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px #76234415;
+    }
+
+    .tech-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .tech-info { flex: 1; min-width: 0; overflow: hidden; }
+
+    .tech-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tech-version {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .tech-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+      word-break: break-word;
+    }
+
+    /* ─── BADGES ──────────────────────────────── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .badge-critical { background: #fef2f2; color: #dc2626; border: 1px solid #fca5a5; }
+    .badge-warning  { background: #fffbeb; color: #d97706; border: 1px solid #fcd34d; }
+    .badge-info     { background: #eff6ff; color: #2563eb; border: 1px solid #93c5fd; }
+    .badge-success  { background: #f0fdf4; color: #16a34a; border: 1px solid #86efac; }
+    .badge-primary  { background: #fdf2f5; color: var(--primary); border: 1px solid #f0a0bb; }
+
+    /* ─── ALERTS ──────────────────────────────── */
+    .alert {
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 14px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .alert .alert-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+    .alert-critical { background: #fef2f2; border: 1px solid #fca5a5; color: #7f1d1d; }
+    .alert-warning  { background: #fffbeb; border: 1px solid #fcd34d; color: #78350f; }
+    .alert-success  { background: #f0fdf4; border: 1px solid #86efac; color: #14532d; }
+    .alert-info     { background: #eff6ff; border: 1px solid #93c5fd; color: #1e3a5f; }
+
+    .alert strong { font-weight: 600; }
+
+    /* ─── CODE BLOCKS ─────────────────────────── */
+    .code-wrap {
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 14px 0;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+
+    .code-header {
+      background: #161622;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .code-dots { display: flex; gap: 6px; }
+
+    .code-dots span {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+
+    .code-dots .red    { background: #ff5f57; }
+    .code-dots .yellow { background: #ffbd2e; }
+    .code-dots .green  { background: #28c840; }
+
+    .code-lang {
+      font-size: 11px;
+      color: #ffffff40;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .code-copy {
+      background: none;
+      border: 1px solid #ffffff20;
+      color: #ffffff60;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all var(--transition);
+    }
+
+    .code-copy:hover { border-color: #ffffff50; color: #ffffff; }
+    .code-copy.copied { border-color: #28c840; color: #28c840; }
+
+    .code-wrap pre {
+      margin: 0;
+      padding: 20px;
+      overflow-x: auto;
+      background: #1e1e2e !important;
+      color: #abb2bf;
+      font-size: 12.5px;
+      line-height: 1.7;
+    }
+
+    .code-wrap pre::-webkit-scrollbar { height: 4px; }
+    .code-wrap pre::-webkit-scrollbar-track { background: #2a2a3e; }
+    .code-wrap pre::-webkit-scrollbar-thumb { background: #ffffff30; border-radius: 4px; }
+
+    /* ─── COMPARISON BLOCKS ───────────────────── */
+    .comparison {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr));
+      gap: 12px;
+      margin: 14px 0;
+    }
+
+    .comparison-col .label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .comparison-col.bad .label { color: #dc2626; }
+    .comparison-col.good .label { color: #16a34a; }
+
+    .comparison-col.bad .code-wrap { border: 2px solid #fca5a5; }
+    .comparison-col.good .code-wrap { border: 2px solid #86efac; }
+
+    /* ─── TABLE ───────────────────────────────── */
+    .styled-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      background: var(--card-bg);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .styled-table th {
+      background: var(--primary);
+      color: white;
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .styled-table td {
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+      vertical-align: middle;
+    }
+
+    .styled-table tr:last-child td { border-bottom: none; }
+
+    .styled-table tr:hover td { background: #f9f5f6; }
+
+    .styled-table code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      background: #f3f4f6;
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--primary);
+    }
+
+    /* ─── DIRECTORY TREE ──────────────────────── */
+    .dir-tree {
+      background: #1e1e2e;
+      border-radius: 10px;
+      padding: 20px 24px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px;
+      line-height: 1.9;
+      overflow-x: auto;
+      white-space: pre;
+      color: #abb2bf;
+    }
+
+    .dir-tree .dir  { color: #61afef; }
+    .dir-tree .file { color: #abb2bf; }
+    .dir-tree .comment { color: #5c6370; font-style: italic; }
+    .dir-tree .warn { color: #e5c07b; }
+    .dir-tree .important { color: #98c379; }
+
+    /* ─── FLOW DIAGRAM ────────────────────────── */
+    .flow {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin: 16px 0;
+    }
+
+    .flow-step {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      position: relative;
+    }
+
+    .flow-step:not(:last-child)::before {
+      content: '';
+      position: absolute;
+      left: 17px;
+      top: 40px;
+      bottom: -8px;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--primary), #76234430);
+    }
+
+    .flow-num {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-active));
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: white;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px #76234440;
+      position: relative;
+      z-index: 1;
+    }
+
+    .flow-content {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 18px;
+      flex: 1;
+      margin-bottom: 8px;
+    }
+
+    .flow-content .title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .flow-content .desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .flow-content code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      background: #f3f4f6;
+      padding: 1px 5px;
+      border-radius: 4px;
+      color: var(--primary);
+    }
+
+    /* ─── CHECKLIST ───────────────────────────── */
+    .checklist {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .checklist li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .checklist li .check {
+      width: 20px; height: 20px;
+      border: 2px solid var(--border);
+      border-radius: 6px;
+      flex-shrink: 0;
+      margin-top: 1px;
+      transition: all var(--transition);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .checklist li.checked .check {
+      background: var(--success);
+      border-color: var(--success);
+      color: white;
+    }
+
+    .checklist li.checked .text { text-decoration: line-through; color: var(--text-muted); }
+
+    .checklist-section {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 12px 0 6px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 4px;
+    }
+
+    /* ─── TABS ────────────────────────────────── */
+    .tabs {
+      margin: 16px 0;
+    }
+
+    .tab-list {
+      display: flex;
+      gap: 2px;
+      background: var(--border);
+      border-radius: 8px;
+      padding: 3px;
+      margin-bottom: 16px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 7px 14px;
+      border: none;
+      background: none;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all var(--transition);
+    }
+
+    .tab-btn.active {
+      background: var(--card-bg);
+      color: var(--primary);
+      font-weight: 600;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ─── RULE CARD ───────────────────────────── */
+    .rule-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--primary);
+      border-radius: 0 10px 10px 0;
+      padding: 16px 20px;
+      margin-bottom: 12px;
+    }
+
+    .rule-card.danger { border-left-color: var(--danger); }
+    .rule-card.warning { border-left-color: var(--warning); }
+    .rule-card.success { border-left-color: var(--success); }
+    .rule-card.info { border-left-color: var(--info); }
+
+    .rule-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .rule-desc {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ─── INLINE CODE ─────────────────────────── */
+    p code, li code, td code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      background: #f3f4f6;
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--primary);
+    }
+
+    /* ─── TYPOGRAPHY ──────────────────────────── */
+    p { font-size: 13.5px; color: var(--text-muted); line-height: 1.7; margin-bottom: 12px; }
+    h3 { font-size: 16px; font-weight: 600; color: var(--text); margin: 20px 0 12px; }
+    h4 { font-size: 14px; font-weight: 600; color: var(--text); margin: 16px 0 10px; }
+    ul { padding-left: 20px; margin-bottom: 12px; }
+    li { font-size: 13px; color: var(--text-muted); line-height: 1.7; margin-bottom: 4px; }
+
+    /* ─── PROGRESS BAR ────────────────────────── */
+    #progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      z-index: 200;
+      transition: width 0.1s linear;
+    }
+
+    /* ─── MOBILE ──────────────────────────────── */
+    #sidebar-toggle {
+      display: none;
+      background: var(--primary);
+      border: none;
+      color: white;
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 18px;
+      align-items: center; justify-content: center;
+    }
+
+    @media (max-width: 1200px) {
+      #content { padding: 28px; }
+
+      #topbar { padding: 10px 28px; }
+    }
+
+    @media (max-width: 900px) {
+      #sidebar {
+        transform: translateX(-100%);
+      }
+
+      #sidebar.open {
+        transform: translateX(0);
+        box-shadow: 4px 0 30px rgba(0,0,0,0.3);
+      }
+
+      #main { margin-left: 0; }
+
+      #sidebar-toggle { display: flex; }
+
+      #topbar { padding: 10px 16px; }
+
+      #content { padding: 16px; }
+
+      #hero { padding: 40px 20px 60px; }
+
+      #hero h1 { font-size: 26px; }
+
+      .hero-stats { gap: 20px; flex-wrap: wrap; }
+
+      .card-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 600px) {
+      .topbar-breadcrumb { display: none; }
+
+      .tech-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ─── SIDEBAR OVERLAY ─────────────────────── */
+    #overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 99;
+    }
+
+    #overlay.show { display: block; }
+
+    /* ─── BACK TO TOP ─────────────────────────── */
+    #back-to-top {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      width: 44px; height: 44px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 20px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 16px #76234450;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: all var(--transition);
+      z-index: 50;
+    }
+
+    #back-to-top.show { opacity: 1; transform: translateY(0); }
+    #back-to-top:hover { background: var(--primary-hover); }
+
+    /* ─── HIDDEN ──────────────────────────────── */
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+<div id="overlay"></div>
+
+<!-- ─── SIDEBAR ─────────────────────────────────────── -->
+<nav id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">
+      <div class="logo-icon">🏦</div>
+      <div>
+        <h1>rdt_web_erp</h1>
+        <span>Inducción Desarrolladores</span>
+      </div>
+    </div>
+    <div class="sidebar-search">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="nav-search" placeholder="Buscar sección…" />
+    </div>
+  </div>
+
+  <div class="sidebar-nav" id="sidebar-nav">
+    <div class="nav-section">Inicio</div>
+    <a class="nav-item active" href="#section-1" data-section="1">
+      <span class="nav-num">1</span> Stack Tecnológico
+    </a>
+    <a class="nav-item" href="#section-2" data-section="2">
+      <span class="nav-num">2</span> Estructura de Directorios
+    </a>
+
+    <div class="nav-section">Arquitectura</div>
+    <a class="nav-item" href="#section-3" data-section="3">
+      <span class="nav-num">3</span> Sistema de Rutas
+    </a>
+    <a class="nav-item" href="#section-4" data-section="4">
+      <span class="nav-num">4</span> Vista + Lógica
+    </a>
+    <a class="nav-item" href="#section-5" data-section="5">
+      <span class="nav-num">5</span> Permisos y Roles
+    </a>
+
+    <div class="nav-section">Componentes</div>
+    <a class="nav-item" href="#section-6" data-section="6">
+      <span class="nav-num">6</span> Componentes Comunes
+    </a>
+    <a class="nav-item" href="#section-7" data-section="7">
+      <span class="nav-num">7</span> Forms/ con prop action
+    </a>
+
+    <div class="nav-section">Estado y Datos</div>
+    <a class="nav-item" href="#section-8" data-section="8">
+      <span class="nav-num">8</span> Stores Pinia
+    </a>
+    <a class="nav-item" href="#section-9" data-section="9">
+      <span class="nav-num">9</span> tableProps Tipado
+    </a>
+    <a class="nav-item" href="#section-13" data-section="13">
+      <span class="nav-num">13</span> Interfaces TypeScript
+    </a>
+    <a class="nav-item" href="#section-14" data-section="14">
+      <span class="nav-num">14</span> API Layer
+    </a>
+
+    <div class="nav-section">Convenciones</div>
+    <a class="nav-item" href="#section-10" data-section="10">
+      <span class="nav-num">10</span> Iconos — Solo Lucide
+    </a>
+    <a class="nav-item" href="#section-11" data-section="11">
+      <span class="nav-num">11</span> Moneda — InputMoney
+    </a>
+    <a class="nav-item" href="#section-12" data-section="12">
+      <span class="nav-num">12</span> Composables
+    </a>
+    <a class="nav-item" href="#section-17" data-section="17">
+      <span class="nav-num">17</span> Naming Conventions
+    </a>
+
+    <div class="nav-section">Build & Config</div>
+    <a class="nav-item" href="#section-15" data-section="15">
+      <span class="nav-num">15</span> Gestión de Chunks
+    </a>
+    <a class="nav-item" href="#section-16" data-section="16">
+      <span class="nav-num">16</span> Temas y Colores
+    </a>
+
+    <div class="nav-section">Referencia</div>
+    <a class="nav-item" href="#section-19" data-section="19">
+      <span class="nav-num">19</span> Debugging
+    </a>
+    <a class="nav-item" href="#section-20" data-section="20">
+      <span class="nav-num">20</span> Flujo End-to-End
+    </a>
+    <a class="nav-item" href="#section-21" data-section="21">
+      <span class="nav-num">21</span> Checklist
+    </a>
+  </div>
+
+  <div class="sidebar-footer">
+    rdt_web_erp · Fiduprevisora · 2026
+  </div>
+</nav>
+
+<!-- ─── MAIN ─────────────────────────────────────────── -->
+<main id="main">
+  <!-- Topbar -->
+  <div id="topbar">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <button id="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+      <div class="topbar-breadcrumb">
+        rdt_web_erp / docs / <span>Inducción Desarrolladores</span>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn-topbar" onclick="window.print()">🖨️ Imprimir</button>
+      <a class="btn-topbar primary" href="INDUCCION_DESARROLLADORES.md" download>⬇️ Descargar .md</a>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <div id="hero">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      Documentación técnica oficial
+    </div>
+    <h1>Inducción para<br/><em>Desarrolladores Nuevos</em></h1>
+    <p>Guía completa de arquitectura, patrones, convenciones y buenas prácticas del proyecto ERP de Fiduprevisora. Reduce tu curva de aprendizaje al mínimo.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="value">21</div><div class="label">Secciones</div></div>
+      <div class="hero-stat"><div class="value">52+</div><div class="label">Módulos</div></div>
+      <div class="hero-stat"><div class="value">100%</div><div class="label">TypeScript</div></div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div id="content">
+
+    <!-- ── SECTION 1: STACK ──────────────────── -->
+    <div class="section" id="section-1">
+      <div class="section-header">
+        <div class="section-num">1</div>
+        <div>
+          <div class="section-title">Stack Tecnológico</div>
+          <div class="section-subtitle">Tecnologías y versiones del proyecto</div>
+        </div>
+      </div>
+
+      <div class="tech-grid">
+        <div class="tech-item">
+          <div class="tech-icon" style="background:#f0fdf4;">💚</div>
+          <div class="tech-info">
+            <div class="tech-name">Vue 3</div>
+            <div class="tech-version">v3.3.8</div>
+            <div class="tech-desc">Composition API + &lt;script setup&gt;</div>
+          </div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-icon" style="background:#fdf4ff;">⚡</div>
+          <div class="tech-info">
+            <div class="tech-name">Vite</div>
+            <div class="tech-version">v4.5.0</div>
+            <div class="tech-desc">Build tool y dev server</div>
+          </div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-icon" style="background:#fff7ed;">🎨</div>
+          <div class="tech-info">
+            <div class="tech-name">Quasar</div>
+            <div class="tech-version">v2.18.6</div>
+            <div class="tech-desc">UI framework — componentes q-*</div>
+          </div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-icon" style="background:#fdf2f8;">🍍</div>
+          <div class="tech-info">
+            <div class="tech-name">Pinia</div>
+            <div class="tech-version">v3.0.1</div>
+            <div class="tech-desc">State management con persistencia</div>
+          </div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-icon" style="background:#eff6ff;">🔷</div>
+          <div class="tech-info">
+            <div class="tech-name">TypeScript</div>
+            <div class="tech-version">v5.9.3</div>
+            <div class="tech-desc">Tipado estático estricto</div>
+          </div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-icon" style="background:#f0fdf4;">🧪</div>
+          <div class="tech-info">
+            <div class="tech-name">Jest</div>
+            <div class="tech-version">v29.7.0</div>
+            <div class="tech-desc">Tests unitarios de stores</div>
+          </div>
+        </div>
+        <div class="tech-item" style="border-color:#F45100; box-shadow: 0 0 0 1px #F4510020;">
+          <div class="tech-icon" style="background:#fff3ee;">✨</div>
+          <div class="tech-info">
+            <div class="tech-name">Lucide Vue Next</div>
+            <div class="tech-version" style="color:#F45100; font-weight:600;">⚠️ ÚNICA fuente de iconos</div>
+            <div class="tech-desc">defaultIconsLucide de useUtils()</div>
+          </div>
+        </div>
+        <div class="tech-item" style="border-color:#F45100; box-shadow: 0 0 0 1px #F4510020;">
+          <div class="tech-icon" style="background:#fff3ee;">💰</div>
+          <div class="tech-info">
+            <div class="tech-name">InputMoneyComponent</div>
+            <div class="tech-version" style="color:#F45100; font-weight:600;">⚠️ ÚNICO para moneda</div>
+            <div class="tech-desc">src/components/InputMoney/</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION 2: DIRECTORIOS ─────────────── -->
+    <div class="section" id="section-2">
+      <div class="section-header">
+        <div class="section-num">2</div>
+        <div>
+          <div class="section-title">Estructura de Directorios</div>
+          <div class="section-subtitle">Propósito de cada carpeta en src/</div>
+        </div>
+      </div>
+
+      <div class="dir-tree">
+<span class="dir">src/</span>
+├── <span class="dir">apis/</span>                  <span class="comment"># executeApi() — NUNCA usar axios.get() directo</span>
+├── <span class="dir">assets/</span>                <span class="comment"># Imágenes, fuentes</span>
+├── <span class="dir">boot/</span>                  <span class="comment"># Interceptores Axios, i18n</span>
+├── <span class="dir">components/</span>
+│   ├── <span class="dir important">Forms/</span>             <span class="comment"># Formularios reutilizables (create/edit/view)</span>
+│   │   ├── <span class="dir">Accounting/</span>    <span class="comment"># Un dir por módulo</span>
+│   │   ├── <span class="dir">Treasury/</span>
+│   │   └── <span class="dir">...</span>
+│   ├── <span class="dir">common/</span>            <span class="comment"># TableList, ContentComponent, Button…</span>
+│   └── <span class="dir important">InputMoney/</span>       <span class="comment"># InputMoneyComponent — ÚNICO para moneda</span>
+├── <span class="dir">composables/</span>
+│   ├── <span class="file">useAlert.ts</span>        <span class="comment"># Notificaciones toast</span>
+│   ├── <span class="file">useShowError.ts</span>    <span class="comment"># Parsear errores Axios</span>
+│   ├── <span class="file">useUtils.ts</span>        <span class="comment"># defaultIconsLucide, formatCurrency…</span>
+│   ├── <span class="file">useRules.ts</span>        <span class="comment"># Validaciones de formularios</span>
+│   └── <span class="file">useMainLoader.ts</span>   <span class="comment"># Loader global overlay</span>
+├── <span class="dir">constants/</span>
+│   ├── <span class="dir important">apis/</span>              <span class="comment"># URLs de endpoints — ÚNICA fuente para stores</span>
+│   │   └── <span class="file">index.ts</span>       <span class="comment"># URL_PATH_TREASURIES, URL_PATH_ACCOUNTING…</span>
+│   ├── <span class="file">alerts.ts</span>          <span class="comment"># TIMEOUT_ALERT</span>
+│   └── <span class="dir warn">mock/</span>              <span class="warn"># Datos ficticios ⚠️ NUNCA en producción</span>
+├── <span class="dir">interfaces/</span>
+│   ├── <span class="dir">global/</span>            <span class="comment"># IBaseTableProps, IErrors — compartidas</span>
+│   └── <span class="dir">customs/</span>           <span class="comment"># Por módulo: accounting/v3/CostCenter.ts</span>
+├── <span class="dir">layouts/</span>            <span class="comment"># Auth/, SideBarMenu/</span>
+├── <span class="dir">router/</span>             <span class="comment"># Rutas por módulo + guards beforeEach</span>
+├── <span class="dir">stores/</span>             <span class="comment"># Pinia stores por módulo con factory index.ts</span>
+├── <span class="dir warn">utils/</span>              <span class="warn"># ⚠️ DEPRECADO — no agregar nada aquí</span>
+└── <span class="dir">views/</span>              <span class="comment"># Vista.vue (template) + Vista.ts (lógica)</span>
+    └── <span class="dir">accounting/chart-accounts/v3/</span>
+        ├── <span class="dir">list/</span>      <span class="comment"># ChartAccountsList.vue + .ts</span>
+        ├── <span class="dir">create/</span>
+        ├── <span class="dir">edit/</span>
+        └── <span class="dir">view/</span>
+      </div>
+    </div>
+
+    <!-- ── SECTION 3: RUTAS ──────────────────── -->
+    <div class="section" id="section-3">
+      <div class="section-header">
+        <div class="section-num">3</div>
+        <div>
+          <div class="section-title">Sistema de Rutas</div>
+          <div class="section-subtitle">RBAC, versionamiento y lazy loading</div>
+        </div>
+      </div>
+
+      <div class="alert alert-info">
+        <span class="alert-icon">ℹ️</span>
+        <div>Los permisos de cada ruta se validan contra la respuesta del login API. El campo <code>requiredValidRole.view</code> debe coincidir <strong>exactamente</strong> con el <code>child.identifier</code> que devuelve el backend.</div>
+      </div>
+
+      <h3>Patrón de ruta con RBAC</h3>
+      <div class="code-wrap">
+        <div class="code-header">
+          <div class="code-dots"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+          <span class="code-lang">typescript — src/router/treasury/checkbooks.ts</span>
+          <button class="code-copy" onclick="copyCode(this)">Copiar</button>
+        </div>
+        <pre><code class="language-typescript">export default [
+  {
+    path: '/tesoreria/chequeras',
+    name: 'CheckbooksList',        // PascalCase — igual al identifier del login
+    component: () => import('@/views/treasury/checkbooks/v1/list/CheckbooksList.vue'),
+    meta: {
+      requiresAuth: true,
+      requiresFirstPasswordChanged: true,
+      requiredValidRole: {
+        module: 'Treasury',        // Clave del módulo en la respuesta del login
+        view: 'CheckbooksList',    // Coincide con child.identifier del login
+        action: 'list'             // 'list'|'create'|'edit'|'delete'|'view'|'export'…
+      },
+    },
+  },
+]</code></pre>
+      </div>
+
+      <h3>Agregar nueva versión sin romper la anterior</h3>
+      <div class="comparison">
+        <div class="comparison-col bad">
+          <div class="label">❌ Mal — rompe URL existente</div>
+          <div class="code-wrap">
+            <div class="code-header"><div class="code-dots"><span class="red"></span></div><span class="code-lang">typescript</span></div>
+            <pre><code class="language-typescript">// Cambiar el path directamente
+// deja la URL vieja sin respuesta
+{
+  path: '/tesoreria/modulo/v2',
+  name: 'ModuloListV2',
+  component: () => import('.../v2/...'),
+}</code></pre>
+          </div>
+        </div>
+        <div class="comparison-col good">
+          <div class="label">✅ Bien — redirect transparente</div>
+          <div class="code-wrap">
+            <div class="code-header"><div class="code-dots"><span class="green"></span></div><span class="code-lang">typescript</span></div>
+            <pre><code class="language-typescript">// URL legacy redirige a la nueva
+{
+  path: '/tesoreria/modulo',
+  redirect: '/tesoreria/modulo/v2',
+},
+{
+  path: '/tesoreria/modulo/v2',
+  name: 'ModuloListV2',
+  component: () => import('.../v2/...'),
+}
+// Una vez v2 pasa QA → eliminar redirect
+// y cambiar path a '/tesoreria/modulo'</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION 4: VISTA + LÓGICA ─────────── -->
+    <div class="section" id="section-4">
+      <div class="section-header">
+        <div class="section-num">4</div>
+        <div>
+          <div class="section-title">Patrón Vista + Lógica</div>
+          <div class="section-subtitle">Separación estricta entre template y lógica</div>
+        </div>
+      </div>
+
+      <div class="alert alert-critical">
+        <span class="alert-icon">🚨</span>
+        <div>El composable se exporta como <strong>instancia ya llamada</strong>: <code>export default useFeatureList()</code> — nunca como función.</div>
+      </div>
+
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-title">📄 FeatureList.vue <span class="badge badge-info">Solo template</span></div>
+          <div class="code-wrap">
+            <div class="code-header"><div class="code-dots"><span class="red"></span><span class="yellow"></span><span class="green"></span></div><span class="code-lang">vue</span><button class="code-copy" onclick="copyCode(this)">Copiar</button></div>
+            <pre><code class="language-html">&lt;template&gt;
+  &lt;div class="q-mx-xl"&gt;
+    &lt;ContentComponent
+      :title="headerProps.title"
+      :breadcrumbs="headerProps.breadcrumbs"
+    &gt;
+      &lt;TableList v-bind="tableProps" @update-page="updatePage" /&gt;
+    &lt;/ContentComponent&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script setup lang="ts"&gt;
+import useCheckbooksList from './CheckbooksList'
+
+// Instancia ya ejecutada — solo desestructurar
+const {
+  headerProps, tableProps,
+  handleFilter, updatePage, validateRouter,
+} = useCheckbooksList
+&lt;/script&gt;</code></pre>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">⚙️ FeatureList.ts <span class="badge badge-primary">Toda la lógica</span></div>
+          <div class="code-wrap">
+            <div class="code-header"><div class="code-dots"><span class="red"></span><span class="yellow"></span><span class="green"></span></div><span class="code-lang">typescript</span><button class="code-copy" onclick="copyCode(this)">Copiar</button></div>
+            <pre><code class="language-typescript">const useCheckbooksList = () => {
+  // Stores DENTRO de la función (nunca a nivel módulo)
+  const { _getCheckbooks } = useCheckbooksStore('v1')
+  const { defaultIconsLucide } = useUtils()
+
+  const tableProps = ref&lt;IBaseTableProps&lt;ICheckbookResponse&gt;&gt;({
+    loading: false, columns: [...], rows: [], pages: {...}
+  })
+
+  // lifecycle, actions, computed…
+
+  return { headerProps, tableProps, handleFilter, validateRouter }
+}
+
+export default useCheckbooksList()  // ← LLAMADO aquí</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <h3>Estructura de carpetas por feature</h3>
+      <div class="dir-tree">
+<span class="dir">src/views/treasury/checkbooks/</span>
+├── <span class="dir">v1/</span>
+│   ├── <span class="dir">list/</span>
+│   │   ├── <span class="file">CheckbooksList.vue</span>    <span class="comment"># Solo template</span>
+│   │   └── <span class="file">CheckbooksList.ts</span>     <span class="comment"># Toda la lógica</span>
+│   ├── <span class="dir">create/</span>
+│   │   ├── <span class="file">CheckbooksCreate.vue</span>
+│   │   └── <span class="file">CheckbooksCreate.ts</span>
+│   ├── <span class="dir">edit/</span>
+│   └── <span class="dir">view/</span>                     <span class="comment"># Opcional — solo lectura</span>
+└── <span class="dir warn">v2/</span>                           <span class="warn"># Nueva versión pendiente de QA</span>
+      </div>
+    </div>
+
+    <!-- ── SECTION 5: PERMISOS ───────────────── -->
+    <div class="section" id="section-5">
+      <div class="section-header">
+        <div class="section-num">5</div>
+        <div>
+          <div class="section-title">Sistema de Permisos y Roles</div>
+          <div class="section-subtitle">RBAC basado en la respuesta del login API</div>
+        </div>
+      </div>
+
+      <div class="flow">
+        <div class="flow-step">
+          <div class="flow-num">1</div>
+          <div class="flow-content">
+            <div class="title">Login API retorna el árbol de permisos</div>
+            <div class="desc">El campo <code>menu[].key</code> = <code>module</code> y <code>menu[].children[].identifier</code> = <code>view</code> en la ruta</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">2</div>
+          <div class="flow-content">
+            <div class="title">Router guard valida en cada navegación</div>
+            <div class="desc"><code>validateRouter(module, view, action)</code> busca si <code>action</code> existe en <code>children[].actions[]</code></div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">3</div>
+          <div class="flow-content">
+            <div class="title">Botones en template se muestran condicionalmente</div>
+            <div class="desc"><code>v-if="validateRouter('Treasury', 'CheckbooksList', 'create')"</code></div>
+          </div>
+        </div>
+      </div>
+
+      <table class="styled-table" style="margin-top:16px;">
+        <thead>
+          <tr><th>Acción</th><th>Descripción</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>list</code></td><td>Ver listado</td></tr>
+          <tr><td><code>view</code></td><td>Ver detalle</td></tr>
+          <tr><td><code>create</code></td><td>Crear registro</td></tr>
+          <tr><td><code>edit</code></td><td>Editar registro</td></tr>
+          <tr><td><code>delete</code></td><td>Eliminar</td></tr>
+          <tr><td><code>export</code></td><td>Exportar datos</td></tr>
+          <tr><td><code>action_authorize</code></td><td>Autorizar</td></tr>
+          <tr><td><code>action_annul</code></td><td>Anular</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ── SECTION 6: COMPONENTES ────────────── -->
+    <div class="section" id="section-6">
+      <div class="section-header">
+        <div class="section-num">6</div>
+        <div>
+          <div class="section-title">Componentes Comunes</div>
+          <div class="section-subtitle">Siempre verificar si existe antes de crear uno nuevo</div>
+        </div>
+      </div>
+
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-title">🔍 FiltersComponentV2</div>
+          <div class="code-wrap"><div class="code-header"><div class="code-dots"><span class="red"></span><span class="yellow"></span><span class="green"></span></div><span class="code-lang">vue</span></div>
+          <pre><code class="language-html">&lt;FiltersComponentV2
+  ref="filterRef"
+  :fields="filterConfig"
+  @filter="handleFilter"
+  @clear-filters="clearFilters"
+/&gt;</code></pre></div>
+        </div>
+        <div class="card">
+          <div class="card-title">📋 TableList</div>
+          <div class="code-wrap"><div class="code-header"><div class="code-dots"><span class="red"></span><span class="yellow"></span><span class="green"></span></div><span class="code-lang">vue</span></div>
+          <pre><code class="language-html">&lt;TableList
+  :columns="tableProps.columns"
+  :rows="tableProps.rows"
+  :pages="tableProps.pages"
+  :loading="tableProps.loading"
+  @update-page="updatePage"
+  v-model:selected="selectedRows"
+&gt;
+  &lt;template #actions="{ row }"&gt;
+    &lt;Button @click="edit(row)" /&gt;
+  &lt;/template&gt;
+&lt;/TableList&gt;</code></pre></div>
+        </div>
+        <div class="card">
+          <div class="card-title">🖼️ ContentComponent</div>
+          <div class="code-wrap"><div class="code-header"><div class="code-dots"><span class="red"></span><span class="yellow"></span><span class="green"></span></div><span class="code-lang">vue</span></div>
+          <pre><code class="language-html">&lt;ContentComponent
+  :title="headerProps.title"
+  :breadcrumbs="headerProps.breadcrumbs"
+  :btn-label="'Crear'"
+  :btn-icon="icons.add"
+  show-back-btn
+  @to="handleCreateClick"
+  @on-back="$router.back()"
+&gt;
+  &lt;!-- contenido --&gt;
+&lt;/ContentComponent&gt;</code></pre></div>
+        </div>
+        <div class="card">
+          <div class="card-title">⚠️ AlertModalComponent</div>
+          <div class="code-wrap"><div class="code-header"><div class="code-dots"><span class="red"></span><span class="yellow"></span><span class="green"></span></div><span class="code-lang">vue</span></div>
+          <pre><code class="language-html">&lt;AlertModalComponent
+  ref="alertModalRef"
+  title="¿Desea eliminar?"
+  @confirm="handleConfirm"
+/&gt;
+
+&lt;!-- Para abrir: --&gt;
+await alertModalRef.value.openModal()</code></pre></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION 7: FORMS ───────────────────── -->
+    <div class="section" id="section-7">
+      <div class="section-header">
+        <div class="section-num">7</div>
+        <div>
+          <div class="section-title">Componentes Forms/ — Prop <code>action</code></div>
+          <div class="section-subtitle">Un formulario que sirve para create, edit y view</div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" onclick="switchTab(this, 'tab-form-why')">¿Por qué?</button>
+          <button class="tab-btn" onclick="switchTab(this, 'tab-form-template')">Template</button>
+          <button class="tab-btn" onclick="switchTab(this, 'tab-form-usage')">Uso desde Vista</button>
+        </div>
+
+        <div class="tab-panel active" id="tab-form-why">
+          <div class="card-grid">
+            <div class="rule-card success">
+              <div class="rule-title">🔄 Reutilización</div>
+              <div class="rule-desc">El mismo componente sirve para create, edit y view. Sin duplicación de código.</div>
+            </div>
+            <div class="rule-card success">
+              <div class="rule-title">✅ Centralización</div>
+              <div class="rule-desc">Todas las validaciones del formulario en un solo lugar.</div>
+            </div>
+            <div class="rule-card success">
+              <div class="rule-title">🔗 Contrato claro</div>
+              <div class="rule-desc">Expone <code>validateForm()</code> que el composable padre llama antes del submit.</div>
+            </div>
+          </div>
+          <div class="dir-tree" style="margin-top:16px;">
+<span class="dir">components/Forms/Treasury/Checkbooks/information/</span>
+├── <span class="file">InformationForm.vue</span>   <span class="comment"># Template del formulario</span>
+└── <span class="file">InformationForm.ts</span>    <span class="comment"># props, models, validateForm()</span>
+
+<span class="comment"># Con versiones:</span>
+<span class="dir">components/Forms/Accounting/ChartAccounts/information/v3/</span>
+├── <span class="file">AccountingAccountForm.vue / .ts</span>
+└── <span class="file">InformationForm.vue / .ts</span>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="tab-form-template">
+          <div class="code-wrap">
+            <div class="code-header"><div class="code-dots"><span class="red"></span><span class="yellow"></span><span class="green"></span></div><span class="code-lang">vue — InformationForm.vue</span><button class="code-copy" onclick="copyCode(this)">Copiar</button></div>
+            <pre><code class="language-html">&lt;template&gt;
+  &lt;q-form ref="formRef"&gt;
+    &lt;!-- Modo VIEW — texto plano --&gt;
+    &lt;template v-if="props.action === 'view'"&gt;
+      &lt;p class="text-weight-medium"&gt;Negocio fiduciario&lt;/p&gt;
+      &lt;p class="text-grey-7"&gt;{{ props.data?.business_trust?.name ?? 'No registrado' }}&lt;/p&gt;
+    &lt;/template&gt;
+
+    &lt;!-- Modo CREATE / EDIT — inputs interactivos --&gt;
+    &lt;GenericSelectorComponent
+      v-if="['create', 'edit'].includes(action)"
+      label="Negocio fiduciario"
+      :disabled="action === 'edit'"
+      :rules="[(val) =&gt; rules.is_required(val)]"
+    /&gt;
+
+    &lt;!-- SIEMPRE InputMoneyComponent para moneda --&gt;
+    &lt;InputMoneyComponent
+      v-if="['create', 'edit'].includes(action)"
+      v-model="models.amount"
+      label="Monto inicial"
+    /&gt;
+  &lt;/q-form&gt;
+&lt;/template&gt;</code></pre>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="tab-form-usage">
+          <div class="code-wrap">
+            <div class="code-header"><div class="code-dots"><span class="red"></span><span class="yellow"></span><span class="green"></span></div><span class="code-lang">vue — Uso desde las tres vistas</span><button class="code-copy" onclick="copyCode(this)">Copiar</button></div>
+            <pre><code class="language-html">&lt;!-- CheckbooksCreate.vue --&gt;
+&lt;InformationForm ref="informationFormRef" action="create" /&gt;
+
+&lt;!-- CheckbooksEdit.vue --&gt;
+&lt;InformationForm
+  ref="informationFormRef"
+  action="edit"
+  :data="currentCheckbook"
+/&gt;
+
+&lt;!-- CheckbooksView.vue --&gt;
+&lt;InformationForm action="view" :data="currentCheckbook" /&gt;</code></pre>
+          </div>
+          <div class="code-wrap" style="margin-top:12px;">
+            <div class="code-header"><div class="code-dots"><span class="red"></span><span class="yellow"></span><span class="green"></span></div><span class="code-lang">typescript — Submit en el composable</span></div>
+            <pre><code class="language-typescript">const onSubmit = async () => {
+  // Llama al validateForm() del componente Form
+  if (!(await informationFormRef.value?.validateForm())) return
+
+  openMainLoader(true)
+  try {
+    const success = await _createCheckbook(makeDataRequest())
+    if (success) router.push({ name: 'CheckbooksList' })
+  } finally {
+    openMainLoader(false)
+  }
+}</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION 8: STORES ─────────────────── -->
+    <div class="section" id="section-8">
+      <div class="section-header">
+        <div class="section-num">8</div>
+        <div>
+          <div class="section-title">Stores Pinia — Reglas Estrictas</div>
+          <div class="section-subtitle">TDZ, versioning, state mínimo y métodos HTTP</div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" onclick="switchTab(this, 'tab-store-state')">State mínimo</button>
+          <button class="tab-btn" onclick="switchTab(this, 'tab-store-imports')">Imports directos</button>
+          <button class="tab-btn" onclick="switchTab(this, 'tab-store-version')">Versioning</button>
+          <button class="tab-btn" onclick="switchTab(this, 'tab-store-http')">Métodos HTTP</button>
+        </div>
+
+        <div class="tab-panel active" id="tab-store-state">
+          <div class="alert alert-critical">
+            <span class="alert-icon">🚨</span>
+            <div><strong>El store NO almacena listas, paginación, forms ni responses.</strong> Las actions retornan los datos directamente. El state solo tiene lo que se comparte entre múltiples componentes o persiste entre navegaciones. Referencia: <code>src/stores/accounting/cost-centers/cost-center-v3.ts</code></div>
+          </div>
+          <div class="comparison">
+            <div class="comparison-col bad">
+              <div class="label">❌ Patrón antiguo — no usar</div>
+              <div class="code-wrap"><div class="code-header"><div class="code-dots"><span class="red"></span></div><span class="code-lang">typescript</span></div>
+              <pre><code class="language-typescript">state: () => ({
+  // ❌ Listas paginadas en state
+  data_list: [] as ICheckbookResponse[],
+  data_pages: { currentPage: 0, lastPage: 0 },
+  // ❌ Forms temporales en state
+  data_information_form: null,
+  // ❌ Respuestas getById en state
+  data_response: null,
+})</code></pre></div>
+            </div>
+            <div class="comparison-col good">
+              <div class="label">✅ Patrón moderno — cost-center-v3.ts</div>
+              <div class="code-wrap"><div class="code-header"><div class="code-dots"><span class="green"></span></div><span class="code-lang">typescript</span></div>
+              <pre><code class="language-typescript">state: () => ({
+  version: 'v3',  // Solo lo compartido/persistente
+}),
+actions: {
+  async _getListAction(params) {
+    let responseList: IPaginated&lt;ICostCenterListItem&gt; | null
+      = { list: [], pages: { currentPage: 0, lastPage: 0 } }
+
+    await executeApi()
+      .get(URL_PATH, { params: { ...params, paginate: 1 } })
+      .then(({ data: { data: { data: items, current_page, last_page }, message, success } }) => {
+        responseList = { list: items, pages: { currentPage: current_page, lastPage: last_page } }
+        showAlert(message, success ? 'success' : 'error', undefined, TIMEOUT_ALERT)
+      })
+      .catch(e => showAlert(showCatchError(e), 'error', undefined, TIMEOUT_ALERT))
+
+    return responseList  // ← View composable recibe y guarda en ref local
+  },
+}</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="tab-store-imports">
+          <div class="comparison">
+            <div class="comparison-col bad">
+              <div class="label">❌ Barrel import → TDZ en producción</div>
+              <div class="code-wrap"><div class="code-header"><div class="code-dots"><span class="red"></span></div><span class="code-lang">typescript</span></div>
+              <pre><code class="language-typescript">// Genera chunk circular → TDZ error
+import { useAlert, useShowError, useUtils }
+  from '@/composables'
+
+// Fuera de defineStore → TDZ
+const { showAlert } = useAlert()
+export const useMyStore = defineStore(...)</code></pre></div>
+            </div>
+            <div class="comparison-col good">
+              <div class="label">✅ Imports directos + dentro de actions</div>
+              <div class="code-wrap"><div class="code-header"><div class="code-dots"><span class="green"></span></div><span class="code-lang">typescript</span></div>
+              <pre><code class="language-typescript">// Imports directos — rompen el ciclo
+import { useAlert } from '@/composables/useAlert'
+import { useShowError } from '@/composables/useShowError'
+
+export const useMyStore = defineStore('my-store', {
+  actions: {
+    async _createX(payload) {
+      // Dentro de la action — correcto
+      const { showAlert } = useAlert()
+      const { showCatchError } = useShowError()
+    }
+  }
+})</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="tab-store-version">
+          <div class="code-wrap">
+            <div class="code-header"><div class="code-dots"><span class="red"></span><span class="yellow"></span><span class="green"></span></div><span class="code-lang">typescript — src/stores/treasury/checkbooks/index.ts</span><button class="code-copy" onclick="copyCode(this)">Copiar</button></div>
+            <pre><code class="language-typescript">export const useCheckbooksStore = (version: 'v1' | 'v2' = 'v1') => {
+  switch (version) {
+    case 'v1': return useCheckbooksStoreV1()
+    case 'v2': return useCheckbooksStoreV2()
+    default:   return useCheckbooksStoreV1()
+  }
+}</code></pre>
+          </div>
+          <div class="alert alert-warning" style="margin-top:12px;">
+            <span class="alert-icon">⚠️</span>
+            <div><strong>Regla de versiones:</strong> Si existen v1, v2 y v5 → v2 es la estable legacy, v5 es la nueva pendiente de QA. Una vez v5 pasa QA → <strong>eliminar v2 completamente</strong> (store + views + Forms asociados). Nunca acumular versiones muertas.</div>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="tab-store-http">
+          <table class="styled-table">
+            <thead>
+              <tr><th>Prefijo de action</th><th>Método HTTP obligatorio</th><th>Ejemplo</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>_getX</code> / <code>_getListAction</code></td><td><span class="badge badge-info">.get()</span></td><td><code>_getListAction → .get()</code></td></tr>
+              <tr><td><code>_createX</code></td><td><span class="badge badge-success">.post()</span></td><td><code>_createCheckbook → .post()</code></td></tr>
+              <tr><td><code>_updateX</code></td><td><span class="badge badge-warning">.put() / .patch()</span></td><td><code>_updateCheckbook → .put()</code></td></tr>
+              <tr><td><code>_deleteX</code></td><td><span class="badge badge-critical">.delete()</span></td><td><code>_deleteCheckbook → .delete()</code></td></tr>
+            </tbody>
+          </table>
+          <div class="alert alert-critical" style="margin-top:12px;">
+            <span class="alert-icon">🚨</span>
+            <div>Un <code>_deleteX</code> que llame <code>.put()</code> es un <strong>bug funcional</strong>, no un problema de estilo.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION 9: TABLE PROPS ────────────── -->
+    <div class="section" id="section-9">
+      <div class="section-header">
+        <div class="section-num">9</div>
+        <div>
+          <div class="section-title">tableProps — Tipado Correcto</div>
+          <div class="section-subtitle">Siempre ref&lt;IBaseTableProps&lt;T&gt;&gt; — nunca inferido</div>
+        </div>
+      </div>
+      <div class="comparison">
+        <div class="comparison-col bad">
+          <div class="label">❌ Tipado inferido — pierde type safety</div>
+          <div class="code-wrap"><div class="code-header"><div class="code-dots"><span class="red"></span></div><span class="code-lang">typescript</span></div>
+          <pre><code class="language-typescript">// TypeScript no puede validar columnas vs interfaz
+const tableProps = ref({
+  columns: [...],
+  rows: [],
+})</code></pre></div>
+        </div>
+        <div class="comparison-col good">
+          <div class="label">✅ Tipado explícito con genérico</div>
+          <div class="code-wrap"><div class="code-header"><div class="code-dots"><span class="green"></span></div><span class="code-lang">typescript</span><button class="code-copy" onclick="copyCode(this)">Copiar</button></div>
+          <pre><code class="language-typescript">import type { IBaseTableProps } from '@/interfaces/global/Table'
+import type { QTableColumn } from 'quasar'
+import type { ICheckbookResponse } from '@/interfaces/customs/...'
+
+const tableProps = ref&lt;IBaseTableProps&lt;ICheckbookResponse&gt;&gt;({
+  title: 'Listado de chequeras',
+  loading: false,
+  columns: [
+    { name: 'id', label: '#', field: 'id', sortable: true, align: 'left' },
+    { name: 'code', label: 'Código', field: 'code', sortable: true },
+  ] as QTableColumn&lt;ICheckbookResponse&gt;[],
+  rows: [] as ICheckbookResponse[],
+  pages: { currentPage: 0, lastPage: 0 },
+})</code></pre></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION 10: ICONOS ─────────────────── -->
+    <div class="section" id="section-10">
+      <div class="section-header">
+        <div class="section-num">10</div>
+        <div>
+          <div class="section-title">Iconos — Solo Lucide</div>
+          <div class="section-subtitle">defaultIconsLucide de useUtils() — nunca strings MDI</div>
+        </div>
+      </div>
+      <div class="alert alert-critical">
+        <span class="alert-icon">🚨</span>
+        <div><strong>Lucide Vue Next es la ÚNICA fuente de iconos.</strong> Strings MDI (<code>'mdi-plus'</code>) están prohibidos en features de negocio. Los iconos se obtienen en el <strong>view composable</strong>, nunca en el store.</div>
+      </div>
+      <div class="comparison">
+        <div class="comparison-col bad">
+          <div class="label">❌ Incorrecto</div>
+          <div class="code-wrap"><div class="code-header"><div class="code-dots"><span class="red"></span></div><span class="code-lang">typescript</span></div>
+          <pre><code class="language-typescript">// ❌ Strings MDI
+icon: 'mdi-plus-circle-outline'
+
+// ❌ useUtils en state() del store → TDZ CRASH
+state: () => ({
+  btn: { icon: useUtils().defaultIconsLucide.plusCircle }
+})
+
+// ❌ A nivel de módulo → TDZ
+const { defaultIconsLucide } = useUtils()
+export const useMyStore = defineStore(...)</code></pre></div>
+        </div>
+        <div class="comparison-col good">
+          <div class="label">✅ Correcto — en el view composable</div>
+          <div class="code-wrap"><div class="code-header"><div class="code-dots"><span class="green"></span></div><span class="code-lang">typescript</span><button class="code-copy" onclick="copyCode(this)">Copiar</button></div>
+          <pre><code class="language-typescript">// En el view composable (.ts) — no en el store
+const { defaultIconsLucide } = useUtils()
+
+const icons = {
+  add:      defaultIconsLucide.plusCircle,
+  edit:     defaultIconsLucide.pencil,
+  delete:   defaultIconsLucide.trash2,
+  view:     defaultIconsLucide.eye,
+  download: defaultIconsLucide.download,
+}
+
+// En template:
+&lt;Button :left-icon="icons.add" /&gt;
+&lt;ContentComponent :btn-icon="icons.add" /&gt;</code></pre></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION 11: MONEDA ─────────────────── -->
+    <div class="section" id="section-11">
+      <div class="section-header">
+        <div class="section-num">11</div>
+        <div>
+          <div class="section-title">Moneda — Solo InputMoneyComponent</div>
+          <div class="section-subtitle">Nunca q-input manual para campos de moneda</div>
+        </div>
+      </div>
+      <div class="comparison">
+        <div class="comparison-col bad">
+          <div class="label">❌ Incorrecto</div>
+          <div class="code-wrap"><div class="code-header"><div class="code-dots"><span class="red"></span></div><span class="code-lang">vue</span></div>
+          <pre><code class="language-html">&lt;q-input v-model="formData.amount" type="number" /&gt;
+&lt;q-input v-model="formData.amount" :mask="'#.###,##'" /&gt;</code></pre></div>
+        </div>
+        <div class="comparison-col good">
+          <div class="label">✅ Correcto — siempre InputMoneyComponent</div>
+          <div class="code-wrap"><div class="code-header"><div class="code-dots"><span class="green"></span></div><span class="code-lang">vue</span><button class="code-copy" onclick="copyCode(this)">Copiar</button></div>
+          <pre><code class="language-html">&lt;InputMoneyComponent
+  v-model="formData.amount"
+  label="Monto inicial"
+/&gt;
+&lt;!-- Maneja: locale, separadores, validación, decimales --&gt;</code></pre></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION 12: COMPOSABLES ───────────── -->
+    <div class="section" id="section-12">
+      <div class="section-header">
+        <div class="section-num">12</div>
+        <div>
+          <div class="section-title">Composables Principales</div>
+          <div class="section-subtitle">useAlert · useShowError · useUtils · useRules · useMainLoader</div>
+        </div>
+      </div>
+
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-title">🔔 useAlert</div>
+          <div class="code-wrap"><div class="code-header"><div class="code-dots"><span class="red"></span><span class="yellow"></span><span class="green"></span></div><span class="code-lang">typescript</span><button class="code-copy" onclick="copyCode(this)">Copiar</button></div>
+          <pre><code class="language-typescript">const { showAlert } = useAlert()
+
+showAlert('Guardado', 'success', undefined, TIMEOUT_ALERT)
+showAlert('Error', 'error', undefined, TIMEOUT_ALERT)
+showAlert('Aviso', 'warning')
+showAlert('Info', 'info')</code></pre></div>
+        </div>
+        <div class="card">
+          <div class="card-title">🛠️ useUtils — funciones clave</div>
+          <div class="code-wrap"><div class="code-header"><div class="code-dots"><span class="red"></span><span class="yellow"></span><span class="green"></span></div><span class="code-lang">typescript</span><button class="code-copy" onclick="copyCode(this)">Copiar</button></div>
+          <pre><code class="language-typescript">const {
+  defaultIconsLucide,  // Iconos Lucide
+  formatCurrency,      // 1500.50 → "$ 1.500,50"
+  downloadBlobXlxx,    // Descarga archivo blob
+  getNameBlob,         // Nombre del Content-Disposition
+  getMaxId,            // ID máximo de un array
+  formatDate,          // Formateo de fechas
+  deepClone,           // Copia profunda
+} = useUtils()</code></pre></div>
+        </div>
+        <div class="card">
+          <div class="card-title">✅ useRules — instanciar UNA vez</div>
+          <div class="comparison" style="grid-template-columns:1fr; gap:8px;">
+            <div class="comparison-col bad">
+              <div class="label">❌ Nueva instancia por keystroke</div>
+              <div class="code-wrap"><div class="code-header"><div class="code-dots"><span class="red"></span></div></div>
+              <pre><code class="language-html">:rules="[(val) =&gt; useRules().is_required(val)]"</code></pre></div>
+            </div>
+            <div class="comparison-col good">
+              <div class="label">✅ Una instancia en el composable</div>
+              <div class="code-wrap"><div class="code-header"><div class="code-dots"><span class="green"></span></div></div>
+              <pre><code class="language-typescript">const rules = useRules()
+// En template:
+// :rules="[rules.is_required, rules.max_length(100)]"</code></pre></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">⏳ useMainLoader</div>
+          <div class="code-wrap"><div class="code-header"><div class="code-dots"><span class="red"></span><span class="yellow"></span><span class="green"></span></div><span class="code-lang">typescript</span><button class="code-copy" onclick="copyCode(this)">Copiar</button></div>
+          <pre><code class="language-typescript">const { openMainLoader } = useMainLoader()
+
+openMainLoader(true)
+try {
+  await executeApi().post(URL_PATH, payload)
+} finally {
+  openMainLoader(false) // Siempre limpiar
+}</code></pre></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION 13: INTERFACES ────────────── -->
+    <div class="section" id="section-13">
+      <div class="section-header">
+        <div class="section-num">13</div>
+        <div>
+          <div class="section-title">Interfaces TypeScript</div>
+          <div class="section-subtitle">Prefijo I · IPaginated&lt;T&gt; · IBaseTableProps&lt;T&gt;</div>
+        </div>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-header"><div class="code-dots"><span class="red"></span><span class="yellow"></span><span class="green"></span></div><span class="code-lang">typescript — Convenciones de nomenclatura</span><button class="code-copy" onclick="copyCode(this)">Copiar</button></div>
+        <pre><code class="language-typescript">interface IPaymentPlan { ... }              // Modelo base
+interface IPaymentPlanToCreate { ... }      // Payload POST
+interface IPaymentPlanToEdit { ... }        // Payload PUT/PATCH
+interface IPaymentPlanResponse { ... }      // Respuesta GET by ID
+interface IPaymentPlanListItem { ... }      // Item en listado (puede ser más liviana)
+
+// interfaces/customs/index.ts — Para listas paginadas retornadas por actions
+export interface IPaginated&lt;T&gt; {
+  list: T[]
+  pages: { currentPage: number; lastPage: number }
+}
+
+// Uso en store action (retorna directamente):
+async _getListAction(params): Promise&lt;IPaginated&lt;ICostCenterListItem&gt; | null&gt; {
+  let responseList: IPaginated&lt;ICostCenterListItem&gt; | null = {
+    list: [],
+    pages: { currentPage: 0, lastPage: 0 },
+  }
+  // ... fetch
+  return responseList
+}
+
+// Uso en view composable (recibe y actualiza tableProps):
+const result = await _getListAction(filtersFormat.value)
+tableProps.value.rows = result?.list ?? []
+tableProps.value.pages = result?.pages ?? { currentPage: 0, lastPage: 0 }</code></pre>
+      </div>
+    </div>
+
+    <!-- ── SECTION 14: API LAYER ──────────────── -->
+    <div class="section" id="section-14">
+      <div class="section-header">
+        <div class="section-num">14</div>
+        <div>
+          <div class="section-title">API Layer</div>
+          <div class="section-subtitle">executeApi() · constants/apis · TIMEOUT_ALERT</div>
+        </div>
+      </div>
+
+      <div class="comparison">
+        <div class="comparison-col bad">
+          <div class="label">❌ Axios directo — nunca</div>
+          <div class="code-wrap"><div class="code-header"><div class="code-dots"><span class="red"></span></div><span class="code-lang">typescript</span></div>
+          <pre><code class="language-typescript">import axios from 'axios'
+// Sin interceptores, sin token, sin redirect 401
+axios.get('/api/v1/treasuries/checkbooks')</code></pre></div>
+        </div>
+        <div class="comparison-col good">
+          <div class="label">✅ Siempre executeApi()</div>
+          <div class="code-wrap"><div class="code-header"><div class="code-dots"><span class="green"></span></div><span class="code-lang">typescript</span><button class="code-copy" onclick="copyCode(this)">Copiar</button></div>
+          <pre><code class="language-typescript">import { executeApi } from '@/apis'
+import { URL_PATH_TREASURIES } from '@/constants/apis'
+import { TIMEOUT_ALERT } from '@/constants/alerts'
+
+const URL_PATH = `${URL_PATH_TREASURIES}/checkbooks`
+
+await executeApi()
+  .get(URL_PATH, { params })
+  .then(({ data: { data, message, success } }) => {
+    showAlert(message, success ? 'success' : 'error', undefined, TIMEOUT_ALERT)
+  })
+  .catch(e => showAlert(showCatchError(e), 'error', undefined, TIMEOUT_ALERT))</code></pre></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION 15: CHUNKS ─────────────────── -->
+    <div class="section" id="section-15">
+      <div class="section-header">
+        <div class="section-num">15</div>
+        <div>
+          <div class="section-title">Gestión de Chunks (Vite)</div>
+          <div class="section-subtitle">manualChunks para evitar TDZ circulares en producción</div>
+        </div>
+      </div>
+
+      <div class="alert alert-critical">
+        <span class="alert-icon">🚨</span>
+        <div>El chunk <code>'charts'</code> está <strong>aislado deliberadamente</strong>. <strong>Nunca mover chart.js ni apexcharts al chunk vendor</strong> — causa un TDZ de inicialización circular en producción.</div>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-header"><div class="code-dots"><span class="red"></span><span class="yellow"></span><span class="green"></span></div><span class="code-lang">typescript — vite.config.ts</span><button class="code-copy" onclick="copyCode(this)">Copiar</button></div>
+        <pre><code class="language-typescript">manualChunks: {
+  'vendor-vue':    ['vue', 'vue-router', 'pinia'],
+  'vendor-quasar': ['quasar'],
+  // ⚠️ NUNCA mover a vendor — TDZ de chart.js
+  'charts': ['chart.js', 'vue-chartjs', 'apexcharts'],
+
+  // Módulos de negocio
+  'module-accounting':   [ /* stores + views */ ],
+  'module-treasury':     [ /* stores + views */ ],
+
+  // ✅ Agregar nuevo módulo grande (>3 stores o >5 views pesadas)
+  'module-nuevo-modulo': [
+    './src/stores/nuevo-modulo/feature/feature-v1.ts',
+    './src/views/nuevo-modulo/feature/v1/list/FeatureList.ts',
+  ],
+}
+
+// experimentalMinChunkSize: 10000 → fusiona micro-chunks automáticamente</code></pre>
+      </div>
+    </div>
+
+    <!-- ── SECTION 16: TEMAS ───────────────────── -->
+    <div class="section" id="section-16">
+      <div class="section-header">
+        <div class="section-num">16</div>
+        <div>
+          <div class="section-title">Sistema de Temas y Colores</div>
+          <div class="section-subtitle">CSS variables dinámicas desde useUtilsBranding</div>
+        </div>
+      </div>
+
+      <div class="card-grid">
+        <div class="card" style="border-left: 4px solid #762344;">
+          <div class="card-title">🎨 Colores del proyecto</div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:32px;height:32px;background:#762344;border-radius:6px;"></div>
+              <div><code>#762344</code> — Primary (botones, sidebar)</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:32px;height:32px;background:#F45100;border-radius:6px;"></div>
+              <div><code>#F45100</code> — Accent (acento)</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:32px;height:32px;background:#5d1d36;border-radius:6px;"></div>
+              <div><code>#5d1d36</code> — Primary hover</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">💅 Uso en SCSS</div>
+          <div class="code-wrap"><div class="code-header"><div class="code-dots"><span class="red"></span><span class="yellow"></span><span class="green"></span></div><span class="code-lang">scss</span></div>
+          <pre><code class="language-scss">.button {
+  background-color: var(--theme-primary-button-color);
+}
+.button:hover {
+  background-color: var(--theme-primary-hover);
+}
+.sidebar {
+  background-color: var(--theme-sidebar-color);
+}</code></pre></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION 17: NAMING ─────────────────── -->
+    <div class="section" id="section-17">
+      <div class="section-header">
+        <div class="section-num">17</div>
+        <div>
+          <div class="section-title">Naming Conventions</div>
+          <div class="section-subtitle">Tabla de referencia rápida</div>
+        </div>
+      </div>
+
+      <table class="styled-table">
+        <thead>
+          <tr><th>Elemento</th><th>Convención</th><th>Ejemplo</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Archivos Vue</td><td>PascalCase</td><td><code>CheckbooksList.vue</code></td></tr>
+          <tr><td>View composable .ts</td><td>camelCase + export como instancia</td><td><code>export default useCheckbooksList()</code></td></tr>
+          <tr><td>Store file</td><td>kebab-case + versión</td><td><code>checkbooks-v1.ts</code></td></tr>
+          <tr><td>Store id (defineStore)</td><td>kebab-case + versión</td><td><code>'checkbooks-store-v1'</code></td></tr>
+          <tr><td>Store export</td><td>camelCase + V{N}</td><td><code>useCheckbooksStoreV1</code></td></tr>
+          <tr><td>Store factory</td><td>camelCase</td><td><code>useCheckbooksStore('v1')</code></td></tr>
+          <tr><td>Store actions</td><td>_ prefix (privadas)</td><td><code>_getListAction</code>, <code>_createCheckbook</code></td></tr>
+          <tr><td>State properties</td><td>snake_case</td><td><code>version</code>, <code>selected_item</code></td></tr>
+          <tr><td>Interfaces</td><td>I prefix + PascalCase</td><td><code>ICheckbookResponse</code></td></tr>
+          <tr><td>Archivos de interfaces</td><td>PascalCase</td><td><code>Checkbooks.ts</code></td></tr>
+          <tr><td>Route names</td><td>PascalCase</td><td><code>CheckbooksList</code></td></tr>
+          <tr><td>Route paths</td><td>kebab-case</td><td><code>/tesoreria/chequeras</code></td></tr>
+          <tr><td>Emitted events</td><td>kebab-case</td><td><code>@update-page</code></td></tr>
+          <tr><td>URL constants</td><td>SCREAMING_SNAKE_CASE</td><td><code>URL_PATH_TREASURIES</code></td></tr>
+          <tr><td>CSS classes</td><td>kebab-case (BEM)</td><td><code>sidebar__logo-container</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ── SECTION 19: DEBUGGING ──────────────── -->
+    <div class="section" id="section-19">
+      <div class="section-header">
+        <div class="section-num">19</div>
+        <div>
+          <div class="section-title">Debugging y Troubleshooting</div>
+          <div class="section-subtitle">Errores más comunes y cómo resolverlos</div>
+        </div>
+      </div>
+
+      <table class="styled-table">
+        <thead>
+          <tr><th>Síntoma</th><th>Causa probable</th><th>Solución</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>Cannot access 'X' before initialization</code></td>
+            <td>Barrel import en store → chunk circular (TDZ)</td>
+            <td>Cambiar <code>from '@/composables'</code> a imports directos <code>from '@/composables/useAlert'</code></td>
+          </tr>
+          <tr>
+            <td>Store/composable <code>undefined</code> en producción (funciona en dev)</td>
+            <td>Llamado a nivel de módulo fuera de función</td>
+            <td>Mover dentro del action o composable</td>
+          </tr>
+          <tr>
+            <td>Ruta siempre redirige a Home</td>
+            <td><code>identifier</code> del login no coincide con <code>view</code> de la ruta</td>
+            <td><code>console.log(useLogin().menus)</code> → verificar <code>child.identifier</code> vs <code>meta.requiredValidRole.view</code></td>
+          </tr>
+          <tr>
+            <td>TDZ en charts en producción</td>
+            <td>chart.js movido al chunk vendor</td>
+            <td>Restaurar <code>'charts'</code> como chunk separado en vite.config.ts</td>
+          </tr>
+          <tr>
+            <td><code>_deleteX</code> modifica en lugar de eliminar</td>
+            <td>Método HTTP incorrecto en la action</td>
+            <td>Verificar que <code>_deleteX</code> use <code>.delete()</code>, no <code>.put()</code></td>
+          </tr>
+          <tr>
+            <td>Iconos no renderizan</td>
+            <td>Strings MDI en lugar de Lucide</td>
+            <td>Cambiar a <code>defaultIconsLucide.nombre</code> desde <code>useUtils()</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ── SECTION 20: FLUJO ───────────────────── -->
+    <div class="section" id="section-20">
+      <div class="section-header">
+        <div class="section-num">20</div>
+        <div>
+          <div class="section-title">Flujo Completo de una Feature</div>
+          <div class="section-subtitle">End-to-End — desde la ruta hasta el DELETE</div>
+        </div>
+      </div>
+
+      <div class="flow">
+        <div class="flow-step">
+          <div class="flow-num">1</div>
+          <div class="flow-content">
+            <div class="title">Usuario entra a <code>/tesoreria/chequeras</code></div>
+            <div class="desc">Router beforeEach: valida token ✓ → valida <code>Treasury.CheckbooksList.list</code> ✓</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">2</div>
+          <div class="flow-content">
+            <div class="title">CheckbooksList.vue carga</div>
+            <div class="desc"><code>useCheckbooksList</code> ya está ejecutado. <code>onMounted</code>: <code>_getResources(keys)</code>, <code>openMainLoader</code></div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">3</div>
+          <div class="flow-content">
+            <div class="title">Usuario filtra → handleFilter → listAction</div>
+            <div class="desc"><code>_getListAction(filters)</code> retorna <code>IPaginated&lt;ICheckbookResponse&gt;</code>. <code>tableProps.value.rows = result.list</code></div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">4</div>
+          <div class="flow-content">
+            <div class="title">Click "Crear" → CheckbooksCreate.vue</div>
+            <div class="desc">Guard valida <code>action='create'</code> ✓. <code>InformationForm</code> con <code>action="create"</code></div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">5</div>
+          <div class="flow-content">
+            <div class="title">Submit: validateForm → _createCheckbook → POST</div>
+            <div class="desc"><code>executeApi().post(URL_PATH, payload)</code> → retorna <code>boolean</code> → <code>router.push('CheckbooksList')</code></div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">6</div>
+          <div class="flow-content">
+            <div class="title">Click "Editar" → CheckbooksEdit.vue</div>
+            <div class="desc"><code>_getByStructureId(id)</code> retorna <code>ICheckbookResponse | null</code>. <code>InformationForm</code> con <code>action="edit" :data="currentCheckbook"</code></div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">7</div>
+          <div class="flow-content">
+            <div class="title">Click "Eliminar" → AlertModal → DELETE</div>
+            <div class="desc"><code>alertModalRef.value.openModal()</code> → confirm → <code>_deleteCheckbook(id)</code> → <code>.delete()</code> → refrescar lista</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION 21: CHECKLIST ──────────────── -->
+    <div class="section" id="section-21">
+      <div class="section-header">
+        <div class="section-num">21</div>
+        <div>
+          <div class="section-title">Checklist para Nueva Feature</div>
+          <div class="section-subtitle">Marca cada ítem al completarlo — se guarda en el navegador</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <ul class="checklist" id="checklist">
+          <li class="checklist-section" style="cursor:default;"><span class="text">📁 Estructura de archivos</span></li>
+
+          <li onclick="toggleCheck(this)">
+            <div class="check">✓</div>
+            <span class="text">Ruta en <code>src/router/[módulo]/[feature].ts</code> con <code>requiredValidRole</code></span>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="check">✓</div>
+            <span class="text">Ruta importada y agregada al array en <code>src/router/index.ts</code></span>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="check">✓</div>
+            <span class="text">Store en <code>src/stores/[módulo]/[feature]/feature-v1.ts</code> + <code>index.ts</code> factory</span>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="check">✓</div>
+            <span class="text">Interfaces en <code>src/interfaces/customs/[módulo]/</code></span>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="check">✓</div>
+            <span class="text">Views en <code>src/views/[módulo]/[feature]/v1/{list,create,edit,view}/</code></span>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="check">✓</div>
+            <span class="text">Formulario en <code>src/components/Forms/[Módulo]/[Feature]/information/</code> con prop <code>action</code></span>
+          </li>
+
+          <li class="checklist-section" style="cursor:default;"><span class="text">🏪 Store</span></li>
+
+          <li onclick="toggleCheck(this)">
+            <div class="check">✓</div>
+            <span class="text"><code>state()</code> solo con <code>version</code> u otro dato compartido real — sin listas, sin forms</span>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="check">✓</div>
+            <span class="text">Actions retornan <code>IPaginated&lt;T&gt;</code>, <code>T | null</code> o <code>boolean</code> directamente</span>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="check">✓</div>
+            <span class="text">URLs importadas de <code>@/constants/apis</code> — ninguna hardcodeada</span>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="check">✓</div>
+            <span class="text">Imports directos de composables (<code>/composables/useAlert</code>, no <code>/composables</code>)</span>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="check">✓</div>
+            <span class="text">Composables llamados dentro de cada action (no a nivel de módulo)</span>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="check">✓</div>
+            <span class="text">Métodos HTTP correctos: <code>_getX→.get()</code>, <code>_createX→.post()</code>, <code>_updateX→.put()</code>, <code>_deleteX→.delete()</code></span>
+          </li>
+
+          <li class="checklist-section" style="cursor:default;"><span class="text">⚙️ View composable</span></li>
+
+          <li onclick="toggleCheck(this)">
+            <div class="check">✓</div>
+            <span class="text"><code>tableProps</code> con <code>ref&lt;IBaseTableProps&lt;IRow&gt;&gt;()</code> tipado explícito</span>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="check">✓</div>
+            <span class="text">Iconos de <code>defaultIconsLucide</code> aquí — nunca en el store</span>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="check">✓</div>
+            <span class="text">Stores instanciados dentro de la función (no a nivel de módulo)</span>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="check">✓</div>
+            <span class="text"><code>useRules()</code> instanciado una vez: <code>const rules = useRules()</code></span>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="check">✓</div>
+            <span class="text"><code>openMainLoader(true/false)</code> en operaciones async con <code>try/finally</code></span>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="check">✓</div>
+            <span class="text"><code>onMounted</code>: cargar recursos, <code>onBeforeUnmount</code>: <code>_resetKeys()</code></span>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="check">✓</div>
+            <span class="text">Export: <code>export default useFeatureList()</code> (llamado, no como función)</span>
+          </li>
+
+          <li class="checklist-section" style="cursor:default;"><span class="text">🎨 Template</span></li>
+
+          <li onclick="toggleCheck(this)">
+            <div class="check">✓</div>
+            <span class="text">Moneda con <code>InputMoneyComponent</code> — nunca <code>q-input</code> para moneda</span>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="check">✓</div>
+            <span class="text">Permisos con <code>v-if="validateRouter(...)"</code> en botones create/edit/delete</span>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="check">✓</div>
+            <span class="text">Botones usan <code>icons.X</code> (de <code>defaultIconsLucide</code>)</span>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="check">✓</div>
+            <span class="text"><code>InformationForm</code> con prop <code>action="create"/"edit"/"view"</code></span>
+          </li>
+
+          <li class="checklist-section" style="cursor:default;"><span class="text">⚡ Opcional — Build</span></li>
+
+          <li onclick="toggleCheck(this)">
+            <div class="check">✓</div>
+            <span class="text">Si módulo grande (>3 stores o >5 views): agregar chunk en <code>vite.config.ts → manualChunks</code></span>
+          </li>
+        </ul>
+
+        <div style="margin-top:16px;display:flex;justify-content:space-between;align-items:center;">
+          <div id="checklist-progress" style="font-size:13px;color:var(--text-muted);">0 / 23 completados</div>
+          <button class="btn-topbar" onclick="resetChecklist()">🔄 Reiniciar</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</main>
+
+<button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+// ─── Highlight.js ───────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el))
+  updateChecklist()
+  loadChecklist()
+})
+
+// ─── Sidebar toggle (mobile) ─────────────
+function toggleSidebar() {
+  const s = document.getElementById('sidebar')
+  const o = document.getElementById('overlay')
+  s.classList.toggle('open')
+  o.classList.toggle('show')
+}
+
+document.getElementById('overlay').addEventListener('click', toggleSidebar)
+
+// ─── Progress bar ─────────────────────────
+window.addEventListener('scroll', () => {
+  const s = document.documentElement
+  const pct = (s.scrollTop / (s.scrollHeight - s.clientHeight)) * 100
+  document.getElementById('progress-bar').style.width = pct + '%'
+
+  // Back to top
+  document.getElementById('back-to-top').classList.toggle('show', s.scrollTop > 300)
+})
+
+// ─── Active nav item ───────────────────────
+const sections = document.querySelectorAll('.section[id]')
+const navItems = document.querySelectorAll('.nav-item[data-section]')
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const id = e.target.id.replace('section-', '')
+      navItems.forEach(n => n.classList.toggle('active', n.dataset.section === id))
+    }
+  })
+}, { rootMargin: '-20% 0px -70% 0px' })
+
+sections.forEach(s => observer.observe(s))
+
+// ─── Search ───────────────────────────────
+document.getElementById('nav-search').addEventListener('input', function() {
+  const q = this.value.toLowerCase()
+  navItems.forEach(item => {
+    const text = item.textContent.toLowerCase()
+    item.classList.toggle('hidden', q !== '' && !text.includes(q))
+  })
+  document.querySelectorAll('.nav-section').forEach(s => s.classList.remove('hidden'))
+})
+
+// ─── Copy code ────────────────────────────
+function copyCode(btn) {
+  const code = btn.closest('.code-wrap').querySelector('code')
+  navigator.clipboard.writeText(code.textContent).then(() => {
+    btn.textContent = 'Copiado ✓'
+    btn.classList.add('copied')
+    setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('copied') }, 2000)
+  })
+}
+
+// ─── Tabs ─────────────────────────────────
+function switchTab(btn, panelId) {
+  const tabList = btn.closest('.tab-list')
+  const tabsContainer = btn.closest('.tabs')
+
+  tabList.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
+  tabsContainer.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'))
+
+  btn.classList.add('active')
+  document.getElementById(panelId).classList.add('active')
+}
+
+// ─── Checklist ────────────────────────────
+function toggleCheck(li) {
+  if (li.classList.contains('checklist-section')) return
+  li.classList.toggle('checked')
+  saveChecklist()
+  updateChecklist()
+}
+
+function updateChecklist() {
+  const items = document.querySelectorAll('#checklist li:not(.checklist-section)')
+  const checked = document.querySelectorAll('#checklist li.checked').length
+  document.getElementById('checklist-progress').textContent =
+    `${checked} / ${items.length} completados`
+
+  if (checked === items.length && items.length > 0) {
+    document.getElementById('checklist-progress').textContent =
+      '🎉 ¡Todo completado! Feature lista para review'
+    document.getElementById('checklist-progress').style.color = 'var(--success)'
+  } else {
+    document.getElementById('checklist-progress').style.color = 'var(--text-muted)'
+  }
+}
+
+function saveChecklist() {
+  const states = Array.from(
+    document.querySelectorAll('#checklist li:not(.checklist-section)')
+  ).map(li => li.classList.contains('checked'))
+  localStorage.setItem('rdt_checklist', JSON.stringify(states))
+}
+
+function loadChecklist() {
+  const saved = localStorage.getItem('rdt_checklist')
+  if (!saved) return
+  const states = JSON.parse(saved)
+  const items = document.querySelectorAll('#checklist li:not(.checklist-section)')
+  items.forEach((li, i) => {
+    if (states[i]) li.classList.add('checked')
+  })
+  updateChecklist()
+}
+
+function resetChecklist() {
+  document.querySelectorAll('#checklist li.checked').forEach(li => li.classList.remove('checked'))
+  localStorage.removeItem('rdt_checklist')
+  updateChecklist()
+}
+</script>
+</body>
+</html>
